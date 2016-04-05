@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="RulerView">
+        <attr name="rulerLineTextSize" format="dimension" />
+        <attr name="rulerLineWidth" format="dimension" />
+        <attr name="rulerLineColor" format="color" />
+
+        <attr name="measureTextSize" format="dimension" />
+        <attr name="measureTextColor" format="color" />
+
+        <attr name="measureLineStrokeWidth" format="float" />
+        <attr name="measureLineColor" format="color" />
+
+        <attr name="backgroundColor" format="color"/>
+
+    </declare-styleable>
+</resources>
