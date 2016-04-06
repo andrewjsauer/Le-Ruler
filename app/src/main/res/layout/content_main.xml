@@ -13,12 +13,10 @@
     tools:context="andrewjsauer.ruler.MainActivity"
     tools:showIn="@layout/activity_main">
 
-
     <andrewjsauer.ruler.RulerView
         android:id="@+id/my_ruler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         />
-
 
 </RelativeLayout>

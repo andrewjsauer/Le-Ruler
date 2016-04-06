@@ -32,25 +32,24 @@ public class RulerView extends View {
      *  https://developer.android.com/intl/ru/reference/android/util/DisplayMetrics.html
      */
 
-    private Paint rulerLinePaint, measureLinePaint, measureTextPaint, backgroundPaint;
+    private Paint mRulerLinePaint, mMeasureLinePaint, mMeasureTextPaint, mBackgroundPaint;
 
-    private int backgroundColor;
+    private int mBackgroundColor;
 
-    private float rulerLineWidth;
-    private float rulerLineTextSize;
-    private int rulerLineColor;
+    private float mRulerLineStrokeWidth;
+    private float mRulerLineTextSize;
+    private int mRulerLineColor;
 
-    private float measureTextSize;
-    private int measureTextColor;
+    private float mMeasureTextSize;
+    private int mMeasureTextColor;
 
-    private float measureLineStokeWidth;
-    private int measureLineColor;
+    private float mMeasureLineStrokeWidth;
+    private int mMeasureLineColor;
 
-    private boolean isMeasureLineMoving;
-    private PointF startMeasureLinePoint;
+    private boolean mIsMeasureLineMoving;
+    private PointF mStartMeasureLinePoint;
 
-    private float ydpmm;
-
+    private float mPxPerInchY;
 
 
     public RulerView(Context context) {
@@ -65,18 +64,24 @@ public class RulerView extends View {
                 R.styleable.RulerView,
                 0, 0);
         try {
-            rulerLineWidth = typedArray.getDimension(R.styleable.RulerView_rulerLineWidth, 8);
-            rulerLineTextSize = typedArray.getDimension(R.styleable.RulerView_rulerLineTextSize, 40);
-            rulerLineColor = typedArray.getColor(R.styleable.RulerView_rulerLineColor, 0xFF03070A);
 
-            measureLineStokeWidth = typedArray.getDimension(R.styleable.RulerView_measureLineStrokeWidth, 8);
-            measureLineColor = typedArray.getColor(R.styleable.RulerView_measureLineColor,
+            mRulerLineStrokeWidth = typedArray
+                    .getDimension(R.styleable.RulerView_rulerLineWidth, 8);
+            mRulerLineTextSize = typedArray
+                    .getDimension(R.styleable.RulerView_rulerLineTextSize, 40);
+            mRulerLineColor = typedArray.getColor(R.styleable.RulerView_rulerLineColor, 0xFF03070A);
+
+            mMeasureLineStrokeWidth = typedArray
+                    .getDimension(R.styleable.RulerView_measureLineStrokeWidth, 8);
+            mMeasureLineColor = typedArray.getColor(R.styleable.RulerView_measureLineColor,
                     ContextCompat.getColor(context, R.color.colorPrimary));
 
-            measureTextSize = typedArray.getDimensionPixelSize(R.styleable.RulerView_measureTextSize, 80);
-            measureTextColor = typedArray.getColor(R.styleable.RulerView_measureTextColor, 0xFF03070A);
+            mMeasureTextSize = typedArray
+                    .getDimensionPixelSize(R.styleable.RulerView_measureTextSize, 80);
+            mMeasureTextColor = typedArray
+                    .getColor(R.styleable.RulerView_measureTextColor, 0xFF03070A);
 
-            backgroundColor = typedArray.getColor(R.styleable.RulerView_backgroundColor,
+            mBackgroundColor = typedArray.getColor(R.styleable.RulerView_backgroundColor,
                     ContextCompat.getColor(context, R.color.colorAccent));
 
         } finally {
@@ -89,24 +94,24 @@ public class RulerView extends View {
     private void initializeView() {
 
         DisplayMetrics metrics = getResources().getDisplayMetrics();
-        ydpmm = (int) metrics.ydpi;
+        mPxPerInchY = (int) metrics.ydpi;
 
-        rulerLinePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        rulerLinePaint.setStrokeWidth(rulerLineWidth);
-        rulerLinePaint.setTextSize(rulerLineTextSize);
-        rulerLinePaint.setColor(rulerLineColor);
+        mRulerLinePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mRulerLinePaint.setStrokeWidth(mRulerLineStrokeWidth);
+        mRulerLinePaint.setTextSize(mRulerLineTextSize);
+        mRulerLinePaint.setColor(mRulerLineColor);
 
-        measureLinePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        measureLinePaint.setColor(measureLineColor);
-        measureLinePaint.setStrokeWidth(measureLineStokeWidth);
-        measureLinePaint.setStyle(Paint.Style.STROKE);
+        mMeasureLinePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mMeasureLinePaint.setColor(mMeasureLineColor);
+        mMeasureLinePaint.setStrokeWidth(mMeasureLineStrokeWidth);
+        mMeasureLinePaint.setStyle(Paint.Style.STROKE);
 
-        measureTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        measureTextPaint.setTextSize(measureTextSize);
-        measureTextPaint.setColor(measureTextColor);
+        mMeasureTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mMeasureTextPaint.setTextSize(mMeasureTextSize);
+        mMeasureTextPaint.setColor(mMeasureTextColor);
 
-        backgroundPaint = new Paint();
-        backgroundPaint.setColor(backgroundColor);
+        mBackgroundPaint = new Paint();
+        mBackgroundPaint.setColor(mBackgroundColor);
     }
 
     @Override
@@ -114,12 +119,14 @@ public class RulerView extends View {
         super.onDraw(canvas);
 
         // Drawing background color
-        canvas.drawPaint(backgroundPaint);
+        canvas.drawPaint(mBackgroundPaint);
 
+        // Getting dimensions of our screen
         int heightPx = getHeight();
         int paddingTopPx = getPaddingTop();
-        int width = getWidth();
+        int widthPx = getWidth();
 
+        // Setting size of our ruler lines
         int inchLineSize = 90;
         int halfInchLineSize = 45;
         int quarterInchSize = 27;
@@ -127,47 +134,55 @@ public class RulerView extends View {
         // Drawing lines in inches, half inches and quarter inches
         for (int i = 0; ;i++) {
 
-            float startYIn = (ydpmm + paddingTopPx) * i;
-            float startXIn = 0;
+            float startYInch = (mPxPerInchY + paddingTopPx) * i;
+            float startXInch = 0;
 
-            float startYHalfIn = startYIn / 2;
-            float startXHalfIn = 0;
+            float startYHalfInch = startYInch / 2;
+            float startXHalfInch = 0;
 
-            float startYQuarterIn = startYHalfIn / 2;
-            float startXQuarterIn = 0;
+            float startYQuarterInch = startYHalfInch / 2;
+            float startXQuarterInch = 0;
 
-            if (startYQuarterIn > heightPx) {
+            if (startYQuarterInch > heightPx) {
                 break;
             }
 
-            canvas.drawLine(startXIn, startYIn, inchLineSize, startYIn, rulerLinePaint);
-            canvas.drawLine(startXHalfIn, startYHalfIn, halfInchLineSize, startYHalfIn, rulerLinePaint);
-            canvas.drawLine(startXQuarterIn, startYQuarterIn, quarterInchSize,
-                    startYQuarterIn, rulerLinePaint);
+            canvas.drawLine(startXInch, startYInch, inchLineSize, startYInch, mRulerLinePaint);
+            canvas.drawLine(startXHalfInch, startYHalfInch, halfInchLineSize, startYHalfInch,
+                    mRulerLinePaint);
+            canvas.drawLine(startXQuarterInch, startYQuarterInch, quarterInchSize,
+                    startYQuarterInch, mRulerLinePaint);
 
-            // Setting the inches text
+            // Setting the ruler inches text
             String textInch = i + "";
             canvas.save();
-            canvas.translate(startXIn + inchLineSize + rulerLinePaint.measureText(textInch), startYIn + rulerLinePaint.measureText(textInch) / 2);
-            canvas.drawText(textInch, 0, 0, rulerLinePaint);
+            canvas.translate(startXInch + inchLineSize + mRulerLinePaint.measureText(textInch),
+                    startYInch + mRulerLinePaint.measureText(textInch) / 2);
+            canvas.drawText(textInch, 0, 0, mRulerLinePaint);
             canvas.restore();
         }
 
         // Drawing the measuring line
-        if (isMeasureLineMoving) {
-            canvas.drawLine(0, startMeasureLinePoint.y, width, startMeasureLinePoint.y, measureLinePaint);
+        if (mIsMeasureLineMoving) {
+            canvas.drawLine(0, mStartMeasureLinePoint.y, widthPx,
+                    mStartMeasureLinePoint.y, mMeasureLinePaint);
         }
 
         // Setting placeholder text
-        String measureText = "-- --- inches";
+        String measureText = "--- ---- inches";
 
         // Setting text in inches from measuring line
-        if (isMeasureLineMoving && startMeasureLinePoint.y > 0) {
-            float distance = Math.abs(startMeasureLinePoint.y);
-            String distanceFormatted  = String.format("%.3f", distance / ydpmm);
+        if (mIsMeasureLineMoving && mStartMeasureLinePoint.y > 0) {
+            float distance = Math.abs(mStartMeasureLinePoint.y);
+            String distanceFormatted = String.format("%.3f", distance / mPxPerInchY);
             measureText = distanceFormatted + " inches";
         }
-        canvas.drawText(measureText, width - measureTextPaint.measureText(measureText), paddingTopPx + measureTextSize, measureTextPaint);
+
+        int measureTextWidth = widthPx - 20;
+        int measureTextHeight = paddingTopPx + 20;
+
+        canvas.drawText(measureText, measureTextWidth - mMeasureTextPaint.measureText(measureText),
+                measureTextHeight + mMeasureTextSize, mMeasureTextPaint);
     }
 
     @Override
@@ -178,21 +193,22 @@ public class RulerView extends View {
         // Setting measuring line according to respected onTouchEvents
         switch(action) {
             case (MotionEvent.ACTION_DOWN): {
-                startMeasureLinePoint = new PointF(event.getX(pointerIndex), event.getY(pointerIndex));
-                isMeasureLineMoving = true;
+                mStartMeasureLinePoint = new PointF(event.getX(pointerIndex),
+                        event.getY(pointerIndex));
+                mIsMeasureLineMoving = true;
                 break;
             }
             case (MotionEvent.ACTION_MOVE) : {
-                if (isMeasureLineMoving) {
-                    startMeasureLinePoint.y = event.getY();
+                if (mIsMeasureLineMoving) {
+                    mStartMeasureLinePoint.y = event.getY();
                 }
                 break;
             }
             case (MotionEvent.ACTION_UP) :
             case (MotionEvent.ACTION_CANCEL) : {
-                if (isMeasureLineMoving) {
-                    startMeasureLinePoint.y = event.getY();
-                    isMeasureLineMoving = false;
+                if (mIsMeasureLineMoving) {
+                    mStartMeasureLinePoint.y = event.getY();
+                    mIsMeasureLineMoving = false;
                 }
                 break;
             }
