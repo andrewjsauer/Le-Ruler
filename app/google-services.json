@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "728146772635",
+    "firebase_url": "https://le-ruler.firebaseio.com",
+    "project_id": "le-ruler",
+    "storage_bucket": "le-ruler.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:728146772635:android:3d37861d1833afbc",
+        "android_client_info": {
+          "package_name": "andrewjsauer.ruler"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "728146772635-p8gg9srfmn1esjiv4mg20g218ru6bep7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "andrewjsauer.ruler",
+            "certificate_hash": "CEEA96F1CFF434D71312B8C9071EA46E2C7F7247"
+          }
+        },
+        {
+          "client_id": "728146772635-e9tsf60u87jd2ihri1v1k06mjbjslisq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB0jkb-wpPly9HfXCITFwCrWd-T-BE79gM"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "728146772635-e9tsf60u87jd2ihri1v1k06mjbjslisq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

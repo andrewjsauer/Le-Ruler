@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "andrewjsauer.ruler"
-        minSdkVersion 21
+        minSdkVersion 19
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
@@ -24,4 +24,8 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:23.2.1'
     compile 'com.android.support:design:23.2.1'
+    compile 'com.google.firebase:firebase-core:9.0.2'
+    compile 'com.google.firebase:firebase-ads:9.0.2'
+    compile 'com.google.firebase:firebase-messaging:9.0.2'
 }
+apply plugin: 'com.google.gms.google-services'
